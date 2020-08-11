@@ -58,6 +58,31 @@ class _Bottleneck(nn.Module):
         h += self.shortcut(x)
         return F.relu(h)
 
+class _ResLayer(nn.Sequential):
+    """
+    Residual layer with multi grids
+    """
+
+    def __init__(self, n_layers, in_ch, out_ch, stride, dilation, multi_grids=None):
+        super(_ResLayer, self).__init__()
+
+        if multi_grids is None:  # multi_grids is a tuple filled with 1
+            multi_grids = [1 for _ in range(n_layers)]
+        else:
+            assert n_layers == len(multi_grids)
+
+        # Downsampling is only in the first block
+        for i in range(n_layers):
+           
+            self.add_module("block{}".format(i + 1),
+                _Bottleneck(
+                    in_ch=(in_ch if i == 0 else out_ch),
+                    out_ch=out_ch,
+                    stride=(stride if i == 0 else 1),
+                    dilation=dilation * multi_grids[i],
+                    downsample=(True if i == 0 else False),
+                ),
+            )
 
 if __name__ == "__main__":
     model = ResNet(n_classes=1000, n_blocks=[3, 4, 23, 3])    
