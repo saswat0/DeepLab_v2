@@ -82,6 +82,11 @@ class ResNet(nn.Sequential):
         self.add_module("flatten", _Flatten())
         self.add_module("fc", nn.Linear(ch[5], n_classes))
 
+class _Flatten(nn.Module):
+    def forward(self, x):
+        return x.view(x.size(0), -1)
+
+
 class _ResLayer(nn.Sequential):
     """
     Residual layer with multi grids
