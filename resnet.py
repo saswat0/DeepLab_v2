@@ -69,6 +69,19 @@ class _Stem(nn.Sequential):
         self.add_module("conv1", _ConvBnReLU(3, out_ch, 7, 2, 3, 1))
         self.add_module("pool", nn.MaxPool2d(3, 2, 1, ceil_mode=True))
 
+class ResNet(nn.Sequential):
+    def __init__(self, n_classes, n_blocks):
+        super(ResNet, self).__init__()
+        ch = [64 * 2 ** p for p in range(6)]    
+        self.add_module("layer1", _Stem(ch[0]))
+        self.add_module("layer2", _ResLayer(n_blocks[0], ch[0], ch[2], 1, 1))
+        self.add_module("layer3", _ResLayer(n_blocks[1], ch[2], ch[3], 2, 1))
+        self.add_module("layer4", _ResLayer(n_blocks[2], ch[3], ch[4], 2, 1))
+        self.add_module("layer5", _ResLayer(n_blocks[3], ch[4], ch[5], 2, 1))
+        self.add_module("pool5", nn.AdaptiveAvgPool2d(1))
+        self.add_module("flatten", _Flatten())
+        self.add_module("fc", nn.Linear(ch[5], n_classes))
+
 class _ResLayer(nn.Sequential):
     """
     Residual layer with multi grids
