@@ -33,6 +33,31 @@ class _ConvBnReLU(nn.Sequential):
         if relu:
             self.add_module("relu", nn.ReLU())
 
+class _Bottleneck(nn.Module):
+    """
+    Bottleneck block of MSRA ResNet.
+    """
+
+    def __init__(self, in_ch, out_ch, stride, dilation, downsample):
+        super(_Bottleneck, self).__init__()
+        self.downsample = downsample
+        mid_ch = out_ch // _BOTTLENECK_EXPANSION
+        self.reduce = _ConvBnReLU(in_ch, mid_ch, 1, stride, 0, 1, True)
+        self.conv3x3 = _ConvBnReLU(mid_ch, mid_ch, 3, 1, dilation, dilation, True)   
+        self.increase = _ConvBnReLU(mid_ch, out_ch, 1, 1, 0, 1, False)
+        self.shortcut = (
+            _ConvBnReLU(in_ch, out_ch, 1, stride, 0, 1, False)
+            if downsample
+            else lambda x: x  # identity
+        )
+
+    def forward(self, x):
+        h = self.reduce(x)
+        h = self.conv3x3(h)
+        h = self.increase(h)
+        h += self.shortcut(x)
+        return F.relu(h)
+
 
 if __name__ == "__main__":
     model = ResNet(n_classes=1000, n_blocks=[3, 4, 23, 3])    
