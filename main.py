@@ -56,5 +56,11 @@ if __name__ == "__main__":
     parser.add_argument('--snapshot', type=str, default='./snapshots/')
     parser.add_argument('--global_counter', type=int, default=0)
 
+    # model
+    parser.add_argument('--num_blocks', type=list, default=[3, 4, 23, 3])
+    parser.add_argument('--atrous_rates', type=tuple, default=(6, 12, 18, 24))
+    parser.add_argument('--multi_scales', type=tuple, default=(0.5, 0.75))
+    parser.add_argument('--model_name', type=str, default='Deeplabv2-ResNet101')
+
     args = parser.parse_args()
     main(args)
