@@ -30,6 +30,12 @@ if __name__ == "__main__":
     parser.add_argument('--scales', type=list, default=[0.5, 0.75, 1.0, 1.25, 1.5])
     parser.add_argument('--split', type=str, default='train')
     
+        # image
+    parser.add_argument('--mean_bgr', type=tuple,default=(122.675, 116.669, 104.008))
+    parser.add_argument('--augment', type=bool, default=True)
+    parser.add_argument('--crop_size', type=int, default='321')
+    parser.add_argument('--base_size', type=int, default=None)
+    parser.add_argument('--flip', type=bool, default=True)
 
     args = parser.parse_args()
     main(args)
