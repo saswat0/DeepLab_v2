@@ -19,3 +19,17 @@ def main(args):
         test.test()
     else:
         raise ValueError('mode is not available!!!')
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+
+    # dataset
+    parser.add_argument('--name', type=str, default='voc')
+    parser.add_argument('--root', type=str, default='path/to/VOCdevkit')
+    parser.add_argument('--num_classes', type=int, default=21)
+    parser.add_argument('--ignore_label', type=int, default=255)
+    parser.add_argument('--scales', type=list, default=[0.5, 0.75, 1.0, 1.25, 1.5])
+    parser.add_argument('--split', type=str, default='train')
+    
+
+    args = parser.parse_args()
+    main(args)
