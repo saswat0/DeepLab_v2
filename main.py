@@ -37,5 +37,24 @@ if __name__ == "__main__":
     parser.add_argument('--base_size', type=int, default=None)
     parser.add_argument('--flip', type=bool, default=True)
 
+    # dataloader
+    parser.add_argument('--num_workers', type=int, default=0)
+
+    # solver
+    parser.add_argument('--batch_size', type=int, default=3)
+    parser.add_argument('--epochs', type=int, default=10)
+    parser.add_argument('--lr', type=float, default=0.001)
+    parser.add_argument('--weight_decay', type=float, default=0.0005)
+    parser.add_argument('--power', type=float, default=0.9)
+    parser.add_argument('--momentum', type=float, default=0.9)
+    parser.add_argument('--resume', type=str, help="checkpoint that model resume from")       
+    parser.add_argument('--pretrain', type=str , default='./model/deeplabv2_resnet101_msc-voc.pth') 
+    parser.add_argument('--mode', type=str, default='train', choices=['train', 'test'])
+    parser.add_argument('--epoch_save', type=int, default=1)
+    parser.add_argument('--epoch_val', type=int, default=2)
+    parser.add_argument('--val', type=bool, default=False)
+    parser.add_argument('--snapshot', type=str, default='./snapshots/')
+    parser.add_argument('--global_counter', type=int, default=0)
+
     args = parser.parse_args()
     main(args)
