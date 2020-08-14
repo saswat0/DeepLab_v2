@@ -82,3 +82,8 @@ class Voc12(data.Dataset):
                 image = np.fliplr(image).copy()
                 label = np.fliplr(label).copy()
         return image, label
+
+def voc_loader(root, split, ignore_label, mean_bgr, augment, base_size, crop_size, scales, flip, args):
+    dataset = Voc12(root, split, ignore_label, mean_bgr, augment, base_size, crop_size, scales, flip)
+    data_loader = data.DataLoader(dataset=dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.batch_size, pin_memory=True)
+    return data_loader
