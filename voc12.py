@@ -60,6 +60,11 @@ class Voc12(data.Dataset):
             else:
                 w, h = int(self.base_size * w / h), self.base_size
         
+        scale_factor = random.choice(self.scales)
+        h, w = int(h * scale_factor), int(w * scale_factor)
+        image = cv2.resize(image, (w, h), interpolation=cv2.INTER_LINEAR)
+        label = cv2.resize(label, (w, h), interpolation=cv2.INTER_NEAREST)
+
         h, w = label.shape
 
         start_h = random.randint(0, h - self.crop_size)
