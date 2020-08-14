@@ -33,3 +33,20 @@ class Voc12(data.Dataset):
         else:
             raise ValueError("Invalid split name: %s" %self.split)
         
+    def __len__(self):
+        return len(self.files)
+
+    def __getitem__(self, index):
+        image_id = self.files[index]
+        image_path = os.path.join(self.root, self.image_dir, image_id + '.jpg')
+        label_path = os.path.join(self.root, self.label_dir, image_id + '.png')
+
+        image = cv2.imread(image_path, cv2.IMREAD_COLOR).astype(np.float32)
+        # label = cv2.imread(label_path, cv2.IMREAD_GRAYSCALE).astype(np.int32)   # i don't know why it doesn't work like this, but it can be work like below
+        label = np.asarray(Image.open(label_path), dtype=np.int32)
+        if self.augment:
+            image, label = self._augment(image, label)
+        image -= self.mean_bgr             # 干啥用了？？？
+        image = image.transpose(2, 0, 1)
+        return image_id, image.astype(np.float32), label.astype(np.int64)
+
