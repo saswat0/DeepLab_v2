@@ -75,3 +75,10 @@ class Voc12(data.Dataset):
         end_w = start_w + self.crop_size
         image = image[start_h : end_h, start_w : end_w]
         label = label[start_h : end_h, start_w : end_w]
+        
+        # random flip
+        if self.flip:
+            if random.random() < 0.5:
+                image = np.fliplr(image).copy()
+                label = np.fliplr(label).copy()
+        return image, label
