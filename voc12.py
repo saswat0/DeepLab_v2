@@ -69,6 +69,12 @@ class Voc12(data.Dataset):
         padd_h = max(self.crop_size - h, 0)
         padd_w = max(self.crop_size - w, 0)
 
+        if padd_h > 0 or padd_w > 0:
+            image = cv2.copyMakeBorder(image, 0, padd_h, 0 ,padd_w, borderType=cv2.BORDER_CONSTANT, value=self.mean_bgr)
+            label = cv2.copyMakeBorder(label, 0, padd_h, 0, padd_w, borderType=cv2.BORDER_CONSTANT, value=self.ignore_label)
+        
+        h, w = label.shape
+        
         start_h = random.randint(0, h - self.crop_size)
         start_w = random.randint(0, w - self.crop_size)
         end_h = start_h + self.crop_size
