@@ -50,3 +50,21 @@ class Voc12(data.Dataset):
         image = image.transpose(2, 0, 1)
         return image_id, image.astype(np.float32), label.astype(np.int64)
 
+    def _augment(self, image, label):
+        # 1.resize
+        h, w = label.shape
+        if self.base_size:
+            # let the minn(h, w) as the baseline
+            if h > w:
+                w, h = self.base_size, int(self.base_size * h / w)
+            else:
+                w, h = int(self.base_size * w / h), self.base_size
+        
+        h, w = label.shape
+
+        start_h = random.randint(0, h - self.crop_size)
+        start_w = random.randint(0, w - self.crop_size)
+        end_h = start_h + self.crop_size
+        end_w = start_w + self.crop_size
+        image = image[start_h : end_h, start_w : end_w]
+        label = label[start_h : end_h, start_w : end_w]
