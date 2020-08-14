@@ -66,6 +66,8 @@ class Voc12(data.Dataset):
         label = cv2.resize(label, (w, h), interpolation=cv2.INTER_NEAREST)
 
         h, w = label.shape
+        padd_h = max(self.crop_size - h, 0)
+        padd_w = max(self.crop_size - w, 0)
 
         start_h = random.randint(0, h - self.crop_size)
         start_w = random.randint(0, w - self.crop_size)
